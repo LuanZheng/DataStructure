@@ -72,8 +72,9 @@ protected:
 	Stack<BinNode<T>*, capacity> *stackHelper;
 	LinkQueue<BinNode<T>*, capacity> *queueHelper;
 	void rotationRight(BinNode<T>* gr, BinNode<T>* pa, BinNode<T>* ch);
-	void rotationLeft(BinNode<T>* gr, BinNode<T>* pa, BinNode<T>* ch);
+	void rotationLeft(BinNode<T>* gr, BinNode<T>* pa, BinNode<T>* ch);	
 private:
+	virtual void updateBalanceFactors(AVLNode<T>* avlNode, bool insertOrDelete = true, bool leftOrRight = true);
 	BinNode<T> *root;
 };
 
@@ -89,7 +90,9 @@ public:
 private:
 	//void rotationRight(AVLNode<T>* gr, AVLNode<T>* pa, AVLNode<T>* ch);
 	//void rotationLeft(AVLNode<T>* gr, AVLNode<T>* pa, AVLNode<T>* ch);
-	void updateBalanceFactors(AVLNode<T>* avlNode);
+	void updateBalanceFactors(AVLNode<T>* avlNode, bool insertOrDelete = true, bool leftOrRight = true);
+	void updateBalanceFactors4Insert(AVLNode<T>* avlNode);
+	void updateBalanceFactors4Delete(AVLNode<T>* avlNode, bool leftOrRight);
 	LinkQueue<AVLNode<T>*, capacity> *queueHelper;
 	AVLNode<T> *root;
 };

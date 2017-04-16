@@ -55,12 +55,12 @@ template<class T>
 bool BinNode<T>::isOnlyoneChildNode(bool &leftOrRight)
 {
 	bool rs = false;
-	if ((NULL == left) && (NULL != right))
+	if ((NULL == getLeft()) && (NULL != getRight()))
 	{
 		leftOrRight = true;
 		rs = true;
 	}
-	else if ((NULL != left) && (NULL == right))
+	else if ((NULL != getLeft()) && (NULL == getRight()))
 	{
 		leftOrRight = false;
 		rs = true;
@@ -336,6 +336,7 @@ bool BinSearchTree<T, capacity>::delViaMerge(T data)
 template<class T, unsigned int capacity>
 bool BinSearchTree<T, capacity>::delViaCopy(T data)
 {
+	//cout << "The data to be deleted is :" << data << endl;
 	bool result = false;
 	if (isEmpty())
 	{
@@ -374,6 +375,7 @@ bool BinSearchTree<T, capacity>::delViaCopy(T data)
 							iter = NULL;
 							//preIter->left = NULL;
 							preIter->setLeft(NULL);
+							updateBalanceFactors(dynamic_cast<AVLNode<T>*>(preIter), false, true);
 						}
 						else
 						{
@@ -381,19 +383,21 @@ bool BinSearchTree<T, capacity>::delViaCopy(T data)
 							iter = NULL;
 							//preIter->right = NULL;
 							preIter->setRight(NULL);
+							updateBalanceFactors(dynamic_cast<AVLNode<T>*>(preIter), false, false);
 						}
 					}
 					else
 					{
 						delete iter;
 						iter = NULL;
-						root = NULL;
+						setRoot(NULL);
 					}
 				}
 				else if (iter->isOnlyoneChildNode(hasLeftOrRight))
 				{
+					bool leftOrRight = true;
 					BinNode<T> *needDeleteBuffer = iter;
-					if (hasLeftOrRight)  //true means only right
+					if (hasLeftOrRight)  //true means only right, it is the out parameter
 					{
 						//iter = iter->right;
 						iter = iter->getRight();
@@ -405,7 +409,7 @@ bool BinSearchTree<T, capacity>::delViaCopy(T data)
 					}
 					if (NULL == preIter)
 					{
-						root = iter;
+						setRoot(iter);
 					}
 					else
 					{
@@ -413,26 +417,38 @@ bool BinSearchTree<T, capacity>::delViaCopy(T data)
 						{
 							//preIter->left = iter;
 							preIter->setLeft(iter);
+							leftOrRight = true;
 						}
 						else
 						{
 							//preIter->right = iter;
 							preIter->setRight(iter);
+							leftOrRight = false;
 						}
+					}
+					if (NULL != dynamic_cast<AVLNode<T>*>(iter))
+					{
+						dynamic_cast<AVLNode<T>*>(iter)->pa = dynamic_cast<AVLNode<T>*>(preIter);
 					}
 					delete needDeleteBuffer;
 					needDeleteBuffer = NULL;
+					updateBalanceFactors(dynamic_cast<AVLNode<T>*>(preIter), false, leftOrRight);					
 				}
-				else  //Copy delete
+				else  //Copy delete, node has 2 child
 				{
+					bool leftOrRight = true;
 					BinNode<T> *needConverNode = iter;
 					preIter = iter;
 					//iter = iter->left;          //turn left
-					iter = iter->getLeft();
+					if (NULL != iter->getLeft())
+					{
+						iter = iter->getLeft();
+					}				
 					while (NULL != iter->getRight()/*iter->right*/)
 					{
 						preIter = iter;
 						//iter = iter->right;
+						leftOrRight = false;
 						iter = iter->getRight();
 					}
 					needConverNode->data = iter->data;
@@ -448,6 +464,7 @@ bool BinSearchTree<T, capacity>::delViaCopy(T data)
 					}
 					delete iter;
 					iter = NULL;
+					updateBalanceFactors(dynamic_cast<AVLNode<T>*>(preIter), false, leftOrRight);
 				}
 				treeNodeNum--;
 				result = true;
@@ -902,6 +919,14 @@ unsigned int BinSearchTree<T, capacity>::getNodeNum()
 }
 
 
+template <class T, unsigned int capacity>
+void BinSearchTree<T, capacity>::updateBalanceFactors(AVLNode<T>* avlNode, bool insertOrDelete = true, bool leftOrRight = true)
+{
+	//do nothing for basic class itself
+	return;
+}
+
+
 template <class T>
 AVLNode<T>::AVLNode()
 {
@@ -1013,137 +1038,8 @@ BinNode<T>* BinSearchTreeAVL<T, capacity>::getRoot()
 	return root;
 }
 
-//template <class T, unsigned int capacity>
-//bool BinSearchTreeAVL<T, capacity>::delViaCopy(T data)
-//{
-//	bool result = false;
-//	if (isEmpty())
-//	{
-//		result = false;
-//	}
-//	else
-//	{
-//		bool findOrNot = false;
-//		AVLNode<T> *preIter = NULL;
-//		AVLNode<T> *iter = root;
-//		while (NULL != iter)
-//		{
-//			if (data < iter->data)
-//			{
-//				preIter = iter;
-//				//iter = iter->left;
-//				iter = (AVLNode<T>*)(iter->getLeft());
-//			}
-//			else if (data > iter->data)
-//			{
-//				preIter = iter;
-//				//iter = iter->right;
-//				iter = (AVLNode<T>*)(iter->getRight());
-//			}
-//			else  //Find the node
-//			{
-//				findOrNot = true;
-//				bool hasLeftOrRight = false;
-//				if (iter->isLeafNode())
-//				{
-//					if (NULL != preIter)
-//					{
-//						if (/*preIter->left*/ preIter->getLeft() == iter)
-//						{
-//							delete iter;
-//							iter = NULL;
-//							//preIter->left = NULL;
-//							preIter->setLeft(NULL);
-//						}
-//						else
-//						{
-//							delete iter;
-//							iter = NULL;
-//							//preIter->right = NULL;
-//							preIter->setRight(NULL);
-//						}
-//					}
-//					else
-//					{
-//						delete iter;
-//						iter = NULL;
-//						root = NULL;
-//					}
-//				}
-//				else if (iter->isOnlyoneChildNode(hasLeftOrRight))
-//				{
-//					BinNode<T> *needDeleteBuffer = iter;
-//					if (hasLeftOrRight)  //true means only right
-//					{
-//						//iter = iter->right;
-//						iter = (AVLNode<T>*)(iter->getRight());
-//					}
-//					else     //false means only left
-//					{
-//						//iter = iter->left;
-//						iter = (AVLNode<T>*)(iter->getLeft());
-//					}
-//					if (NULL == preIter)
-//					{
-//						root = iter;
-//					}
-//					else
-//					{
-//						if (/*preIter->left*/ preIter->getLeft() == needDeleteBuffer)
-//						{
-//							//preIter->left = iter;
-//							preIter->setLeft(iter);
-//						}
-//						else
-//						{
-//							//preIter->right = iter;
-//							preIter->setRight(iter);
-//						}
-//					}
-//					delete needDeleteBuffer;
-//					needDeleteBuffer = NULL;
-//				}
-//				else  //Copy delete
-//				{
-//					BinNode<T> *needConverNode = iter;
-//					preIter = iter;
-//					//iter = iter->left;          //turn left
-//					iter = (AVLNode<T>*)(iter->getLeft());
-//					while (NULL != iter->getRight()/*iter->right*/)
-//					{
-//						preIter = iter;
-//						//iter = iter->right;
-//						iter = (AVLNode<T>*)(iter->getRight());
-//					}
-//					needConverNode->data = iter->data;
-//					if (needConverNode == preIter)
-//					{
-//						//preIter->left = iter->left;
-//						preIter->setLeft((AVLNode<T>*)(iter->getLeft()));
-//					}
-//					else
-//					{
-//						//preIter->right = iter->left;
-//						preIter->setRight((AVLNode<T>*)(iter->getLeft()));
-//					}
-//					delete iter;
-//					iter = NULL;
-//				}
-//				treeNodeNum--;
-//				result = true;
-//				break;
-//			}
-//		}
-//		if (false == findOrNot)
-//		{
-//			result = false;
-//		}
-//	}
-//	return result;
-//}
-
 template <class T, unsigned int capacity>
-void BinSearchTreeAVL<T, capacity>::updateBalanceFactors(AVLNode<T>* avlNode)
+void BinSearchTreeAVL<T, capacity>::updateBalanceFactors4Insert(AVLNode<T>* avlNode)
 {
 	if (root == avlNode)
 	{
@@ -1264,7 +1160,7 @@ void BinSearchTreeAVL<T, capacity>::updateBalanceFactors(AVLNode<T>* avlNode)
 
 			}
 			//the new insert node in left tree right
-			else if ((pa->balanceValue == -2) && (NULL != pa->getLeft()/*pa->left*/) && (/*pa->left*/static_cast<AVLNode<T>*>(pa->getLeft())->balanceValue == 1))          
+			else if ((pa->balanceValue == -2) && (NULL != pa->getLeft()/*pa->left*/) && (/*pa->left*/static_cast<AVLNode<T>*>(pa->getLeft())->balanceValue == 1))
 			{
 				AVLNode<T>* rotationLGrNode = pa;
 				AVLNode<T>* rotationLPaNode = static_cast<AVLNode<T>*>(pa->getLeft()/*pa->left*/);
@@ -1317,66 +1213,341 @@ void BinSearchTreeAVL<T, capacity>::updateBalanceFactors(AVLNode<T>* avlNode)
 	return;
 }
 
+template <class T, unsigned int capacity>
+void BinSearchTreeAVL<T, capacity>::updateBalanceFactors4Delete(AVLNode<T>* avlNode, bool leftOrRight)
+{
+	//For delete, the avlNode should be the pa Node, leftOrRight means the del node is 
+	//pa's left or right
+	if (NULL == avlNode)
+	{
 
-//template <class T, unsigned int capacity>
-//void BinSearchTreeAVL<T, capacity>::rotationRight(AVLNode<T>* gr, AVLNode<T>* pa, AVLNode<T>* ch)
-//{
-//	if (NULL == gr)                   //the current pa must be root, no gr case
-//	{
-//		//pa->left = ch->right;
-//		pa->setLeft(ch->getRight());
-//		//ch->right = pa;
-//		ch->setRight(pa);
-//		//root = ch;                    //In this case, ch should be the new root after rotate
-//		setRoot(ch);
-//	}
-//	else
-//	{
-//		if (/*gr->right*/gr->getRight() == pa)
-//		{
-//			//gr->right = ch;
-//			gr->setRight(ch);
-//		}
-//		else
-//		{
-//			//gr->left = ch;
-//			gr->setLeft(ch);
-//		}
-//		//pa->left = ch->right;
-//		pa->setLeft(ch->getRight());
-//		//ch->right = pa;
-//		ch->setRight(pa);
-//	}
-//	return;
-//}
+	}
+	else
+	{
+		if (leftOrRight)     //Left
+		{
+			if (0 == avlNode->balanceValue)
+			{
+				avlNode->balanceValue = 1;
+			}
+			else if (-1 == avlNode->balanceValue)
+			{
+				avlNode->balanceValue = 0;
+				//Go up
+				AVLNode<T>* pa = avlNode->pa;
+				if (NULL != pa)
+				{
+					if (avlNode == pa->getLeft())
+					{
+						updateBalanceFactors4Delete(pa, true);
+					}
+					else
+					{
+						updateBalanceFactors4Delete(pa, false);
+					}
+				}
+			}
+			else
+			{
+				//if (null == dynamic_cast<AVLNode<T>*>(avlNode->getRight()))
+				//{
+				//	avlNode->balanceValue = 0;
+				//}
+				//rotation
+				//First case, single rotation left
+				if (dynamic_cast<AVLNode<T>*>(avlNode->getRight())->balanceValue == 0)
+				{
+					AVLNode<T>* gr = avlNode->pa;
+					AVLNode<T>* ch = dynamic_cast<AVLNode<T>*>(avlNode->getRight());
+					AVLNode<T>* chLeft = dynamic_cast<AVLNode<T>*>(ch->getLeft());
+					rotationLeft(gr, avlNode, ch);
+					avlNode->balanceValue = 1;
+					ch->balanceValue = -1;
+					//Set pa pointer
+					avlNode->pa = ch;
+					ch->pa = gr;
+					if (NULL != chLeft)
+						chLeft->pa = avlNode;
+					//do not need Go up, because the subtree height not changed
+				}
+				//Second case, still single rotation left
+				else if (dynamic_cast<AVLNode<T>*>(avlNode->getRight())->balanceValue == 1)
+				{
+					AVLNode<T>* gr = avlNode->pa;
+					AVLNode<T>* ch = dynamic_cast<AVLNode<T>*>(avlNode->getRight());
+					AVLNode<T>* chLeft = dynamic_cast<AVLNode<T>*>(ch->getLeft());
+					rotationLeft(gr, avlNode, ch);
+					avlNode->balanceValue = 0;
+					ch->balanceValue = 0;
+					//Set pa pointer
+					if (NULL != chLeft)
+						chLeft->pa = avlNode;
+					avlNode->pa = ch;
+					ch->pa = gr;
+					//Need Go up, becuase the subtree height changed (-1)
+					if (NULL != gr)
+					{
+						if (ch == gr->getLeft())
+						{
+							updateBalanceFactors4Delete(gr, true);
+						}
+						else
+						{
+							updateBalanceFactors4Delete(gr, false);
+						}
+					}
+				}
+				//Need double rotation
+				else
+				{
+					AVLNode<T>* grPa = avlNode->pa;
+					//bool leftOrRightFlag = false;
+					//if (grPa != NULL)
+					//{
+					//	if (grPa->getLeft() == avlNode)
+					//	{
+					//		leftOrRightFlag = false;
+					//	}
+					//	else
+					//	{
+					//		leftOrRightFlag = true;
+					//	}
+					//}
+					//else
+					//{
+					//	setRoot(ch);
+					//}
+					AVLNode<T>* gr = avlNode;
+					AVLNode<T>* pa = dynamic_cast<AVLNode<T>*>(gr->getRight());
+					AVLNode<T>* ch = dynamic_cast<AVLNode<T>*>(pa->getLeft());
+					int oldChBalanceValue = ch->balanceValue;
+					AVLNode<T>* oldChLeft = dynamic_cast<AVLNode<T>*>(ch->getLeft());
+					AVLNode<T>* oldChRight = dynamic_cast<AVLNode<T>*>(ch->getRight());
+					rotationRight(gr, pa, ch);
+					rotationLeft(grPa, gr, ch);
+					//if (NULL != grPa)
+					//{
+					//	if (leftOrRightFlag)
+					//	{
+					//		grPa->setRight(ch);
+					//	}
+					//	else
+					//	{
+					//		grPa->setLeft(ch);
+					//	}
+					//}
+					//set pa pointer
+					if (NULL != oldChLeft)
+						oldChLeft->pa = gr;
+					if (NULL != oldChRight)
+						oldChRight->pa = pa;
+					pa->pa = ch;
+					gr->pa = ch;
+					ch->pa = grPa;
+					//set balance value
+					ch->balanceValue = 0;
+					if (oldChBalanceValue == 0)
+					{
+						gr->balanceValue = 0;
+						pa->balanceValue = 0;
+					}
+					else if (oldChBalanceValue == -1)
+					{
+						gr->balanceValue = 0;
+						pa->balanceValue = 1;
+					}
+					else
+					{
+						gr->balanceValue = -1;
+						pa->balanceValue = 0;
+					}
+					//Need go up, because the subtree height changed (-1)
+					if (NULL != grPa)
+					{
+						if (ch == grPa->getLeft())
+						{
+							updateBalanceFactors4Delete(grPa, true);
+						}
+						else
+						{
+							updateBalanceFactors4Delete(grPa, false);
+						}
+					}
+				}
+			}
+		}
+		else                 //Right
+		{
+			if (0 == avlNode->balanceValue)
+			{
+				avlNode->balanceValue = -1;
+			}
+			else if (-1 == avlNode->balanceValue)
+			{
+				//avlNode->balanceValue = -2;
+				//rotation
+				//First case, single rotation right
+				if (dynamic_cast<AVLNode<T>*>(avlNode->getLeft())->balanceValue == 0)
+				{
+					AVLNode<T>* gr = avlNode->pa;
+					AVLNode<T>* ch = dynamic_cast<AVLNode<T>*>(avlNode->getLeft());
+					AVLNode<T>* chRight = dynamic_cast<AVLNode<T>*>(ch->getRight());
+					rotationRight(gr, avlNode, ch);
+					avlNode->balanceValue = -1;
+					ch->balanceValue = 1;
+					//Set pa pointer
+					if(NULL != chRight)
+						chRight->pa = avlNode;
+					avlNode->pa = ch;
+					ch->pa = gr;
+					//do not need Go up, because the subtree height not changed
+				}
+				//Second case, still single rotation right,need go up
+				else if (dynamic_cast<AVLNode<T>*>(avlNode->getLeft())->balanceValue == -1)
+				{
+					AVLNode<T>* gr = avlNode->pa;
+					AVLNode<T>* ch = dynamic_cast<AVLNode<T>*>(avlNode->getLeft());
+					AVLNode<T>* chRight = dynamic_cast<AVLNode<T>*>(ch->getRight());
+					rotationRight(gr, avlNode, ch);
+					avlNode->balanceValue = 0;
+					ch->balanceValue = 0;
+					//Set pa pointer
+					if (NULL != chRight)
+						chRight->pa = avlNode;
+					avlNode->pa = ch;
+					ch->pa = gr;
 
-//template <class T, unsigned int capacity>
-//void BinSearchTreeAVL<T, capacity>::rotationLeft(AVLNode<T>* gr, AVLNode<T>* pa, AVLNode<T>* ch)
-//{
-//	AVLNode<T>* tmp = static_cast<AVLNode<T>*>(ch->getLeft())/*ch->left*/;
-//	//ch->left = pa;
-//	ch->setLeft(pa);
-//	//pa->right = tmp;
-//	pa->setRight(tmp);
-//	if (NULL == gr)
-//	{
-//		root = ch;
-//	}
-//	else
-//	{
-//		if (/*gr->right*/gr->getRight() == pa)
-//		{
-//			//gr->right = ch;
-//			gr->setRight(ch);
-//		}
-//		else
-//		{
-//			//gr->left = ch;
-//			gr->setLeft(ch);
-//		}
-//	}
-//	return;
-//}
+					//Need Go up, becuase the subtree height changed (-1)
+					if (NULL != gr)
+					{
+						if (ch == gr->getLeft())
+						{
+							updateBalanceFactors4Delete(gr, true);
+						}
+						else
+						{
+							updateBalanceFactors4Delete(gr, false);
+						}
+					}
+				}
+				//Double rotation
+				else
+				{
+					AVLNode<T>* grPa = avlNode->pa;
+					//bool leftOrRightFlag = false;
+					//if (grPa != NULL)
+					//{
+					//	if (grPa->getLeft() == avlNode)
+					//	{
+					//		leftOrRightFlag = false;
+					//	}
+					//	else
+					//	{
+					//		leftOrRightFlag = true;
+					//	}
+					//}
+					//AVLNode<T>* grPa = avlNode->pa;
+					AVLNode<T>* gr = avlNode;
+					AVLNode<T>* pa = dynamic_cast<AVLNode<T>*>(gr->getLeft());
+					AVLNode<T>* ch = dynamic_cast<AVLNode<T>*>(pa->getRight());
+					int oldChBalanceValue = ch->balanceValue;
+					AVLNode<T>* oldChLeft = dynamic_cast<AVLNode<T>*>(ch->getLeft());
+					AVLNode<T>* oldChRight = dynamic_cast<AVLNode<T>*>(ch->getRight());
+					rotationLeft(gr, pa, ch);
+					rotationRight(grPa, gr, ch);
+					//if (NULL != grPa)
+					//{
+					//	if (leftOrRightFlag)
+					//	{
+					//		grPa->setRight(ch);
+					//	}
+					//	else
+					//	{
+					//		grPa->setLeft(ch);
+					//	}
+					//}
+					//else
+					//{
+					//	setRoot(ch);
+					//}
+					//set pa pointer
+					if(NULL != oldChLeft)
+						oldChLeft->pa = pa;
+					if (NULL != oldChRight)
+						oldChRight->pa = gr;
+					pa->pa = ch;
+					gr->pa = ch;
+					ch->pa = grPa;
+					//set balance value
+					ch->balanceValue = 0;
+					if (oldChBalanceValue == 0)
+					{
+						gr->balanceValue = 0;
+						pa->balanceValue = 0;
+					}
+					else if (oldChBalanceValue == -1)
+					{
+						gr->balanceValue = 1;
+						pa->balanceValue = 0;
+					}
+					else
+					{
+						gr->balanceValue = 0;
+						pa->balanceValue = -1;
+					}
+					//Need go up, because the subtree height changed (-1)
+					if (NULL != grPa)
+					{
+						if (ch == grPa->getLeft())
+						{
+							updateBalanceFactors4Delete(grPa, true);
+						}
+						else
+						{
+							updateBalanceFactors4Delete(grPa, false);
+						}
+					}
+				}
+			}
+			else
+			{
+				avlNode->balanceValue = 0;
+				//Go up
+				AVLNode<T>* pa = avlNode->pa;
+				if (NULL != pa)
+				{
+					if (avlNode == pa->getLeft())
+					{
+						updateBalanceFactors4Delete(pa, true);
+					}
+					else
+					{
+						updateBalanceFactors4Delete(pa, false);
+					}
+				}
+			}
+		}
+	}
+	return;
+}
+
+
+
+template <class T, unsigned int capacity>
+void BinSearchTreeAVL<T, capacity>::updateBalanceFactors(AVLNode<T>* avlNode, bool insertOrDelete, bool leftOrRight)
+{
+	//false means delete, true means insert
+	if (insertOrDelete)
+	{
+		updateBalanceFactors4Insert(avlNode);
+	}
+	else
+	{
+		updateBalanceFactors4Delete(avlNode, leftOrRight);
+	}
+	return;
+}
+
 
 
 template <class T, unsigned int capacity>
@@ -1396,13 +1567,13 @@ bool BinSearchTreeAVL<T, capacity>::scopeOrder()
 			AVLNode<T>* temp = NULL;
 			queueHelper->deQueue(temp);
 			cout << "ScopeOrder: The value is :" << temp->data << endl;
-			if (NULL != temp->left)
+			if (NULL != temp->getLeft())
 			{
-				queueHelper->enQueue(temp->left);
+				queueHelper->enQueue(dynamic_cast<AVLNode<T>*>(temp->getLeft()));
 			}
-			if (NULL != temp->right)
+			if (NULL != temp->getRight())
 			{
-				queueHelper->enQueue(temp->right);
+				queueHelper->enQueue(dynamic_cast<AVLNode<T>*>(temp->getRight()));
 			}
 		}
 		if (NULL != queueHelper)
