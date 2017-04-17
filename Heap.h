@@ -3,22 +3,27 @@
 
 #include "Constant.h"
 
+
+template <class T>
 struct HeapNode
 {
-	int data;                 //data
+	T data;                 //data
 };
 
+
+template <class T, unsigned int capacity>
 class Heap
 {
 public:
 	Heap();
-	void AddElem(int value);
-	void deleteElem(int& value);
+	~Heap();
+	void AddElem(T value);
+	void deleteElem(T &value);
 	bool isFull();
 	bool isEmpty();
 private:
-	HeapNode* heapArray[HEAP_NODE_SIZE];
-	int elemNum;
+	HeapNode<T>** heapArray;
+	unsigned int elemNum;
 };
 
 #endif
