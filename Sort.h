@@ -10,8 +10,8 @@ public:
 	Sort();
 	~Sort();
 	void directInsertSort(T* const sortArray, const unsigned int size);
-	//void simpleSelectSort();
-	//void bubbleSort();
+	void simpleSelectSort(T* const sortArray, const unsigned int size);
+	void bubbleSort(T* const sortArray, const unsigned int size);
 	//void combSort();
 	//void shellSort();
 	//void quickSort(int low, int high);

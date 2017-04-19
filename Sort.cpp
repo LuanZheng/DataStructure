@@ -46,6 +46,73 @@ void Sort<T>::directInsertSort(T* const sortArray, const unsigned int size)
 	}
 }
 
+
+//Simple Select Sort
+//1. Not Stable
+//2. Compare times will identical as original sequence different, O(n2)
+//3. Move times will different as original sequence different, O(n)
+//4. Terminate condition: none
+template<typename T>
+void Sort<T>::simpleSelectSort(T* const sortArray, const unsigned int size)
+{
+	T smallest;
+	for (unsigned int i = 0; i < size; i++)
+	{
+		smallest = sortArray[i];
+		int smallestFlag = i;
+		for (unsigned int j = i+1; j < size; j++)
+		{			
+			loopTimes++;
+			if (sortArray[j] < smallest)
+			{
+				smallest = sortArray[j];
+				smallestFlag = j;
+			}
+		}
+		if (smallestFlag != i)
+		{
+			T temp = sortArray[i];
+			sortArray[i] = sortArray[smallestFlag];
+			sortArray[smallestFlag] = temp;
+			moveTimes++;
+		}
+	}
+}
+
+//Bubble sort
+//1. Stable
+//2. Time complecity, O(n2)
+//3. Space complecity, O(n2)
+//4. Terminate condition, during one time compare, no change happens
+template <typename T>
+void Sort<T>::bubbleSort(T* const sortArray, const unsigned int size)
+{
+	bool hasSwap = false;
+	for (unsigned int i = 0; i < size; i++)
+	{
+		hasSwap = false;
+		for (unsigned int j = size-1; j > i; j--)
+		{
+			loopTimes++;
+			if (sortArray[j] < sortArray[j-1])
+			{
+				T temp = sortArray[j];
+				sortArray[j] = sortArray[j - 1];
+				sortArray[j - 1] = temp;
+				hasSwap = true;
+				moveTimes++;
+			}
+		}
+		if (!hasSwap)
+			break;
+	}
+	return;
+}
+
+
+
+
+
 //
 //void Sort::mergeSort(int low, int high)
 //{
@@ -184,40 +251,6 @@ void Sort<T>::directInsertSort(T* const sortArray, const unsigned int size)
 //				break;
 //			}
 //		}
-//	}
-//}
-//
-//
-////Simple Select Sort
-////1. Not Stable
-////2. Compare times will identical as original sequence different, O(n2)
-////3. Move times will different as original sequence different, O(n)
-////4. Terminate condition: none
-//
-//void Sort::simpleSelectSort()
-//{
-//	int smallest;
-//	for (int i = 0; i < SORT_ARRAY_SIZE; i++)
-//	{
-//		smallest = a[i];
-//		int smallestFlag = i;
-//		for (int j = i+1; j < SORT_ARRAY_SIZE; j++)
-//		{			
-//			loopTimes++;
-//			if (a[j] < smallest)
-//			{
-//				smallest = a[j];
-//				smallestFlag = j;
-//			}
-//		}
-//		if (smallestFlag != i)
-//		{
-//			int temp = a[i];
-//			a[i] = a[smallestFlag];
-//			a[smallestFlag] = temp;
-//			moveTimes++;
-//		}
-//
 //	}
 //}
 //
