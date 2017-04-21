@@ -12,8 +12,8 @@ public:
 	void directInsertSort(T* const sortArray, const unsigned int size);
 	void simpleSelectSort(T* const sortArray, const unsigned int size);
 	void bubbleSort(T* const sortArray, const unsigned int size);
-	//void combSort();
-	//void shellSort();
+	void combSort(T* const sortArray, const unsigned int size);
+	void shellSort(T* const sortArray, const unsigned int size);
 	//void quickSort(int low, int high);
 	//void mergeSort(int low, int high);
 	void print(T* const sortArray, const unsigned int size);

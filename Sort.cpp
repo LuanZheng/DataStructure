@@ -110,6 +110,107 @@ void Sort<T>::bubbleSort(T* const sortArray, const unsigned int size)
 }
 
 
+//Combsort
+//1. Stable
+//2. Time complex O(n2)
+//3. Space complecity, O(n2)
+//4. Terminate condition, for first stage, step become 1, for second stage, during one time compare, no change happens
+
+template<typename T>
+void Sort<T>::combSort(T* const sortArray, const unsigned int size)
+{
+	//First stage
+	unsigned int step = size / 1.3;
+	while (step > 1)
+	{
+		for (unsigned int i = size - 1; i >= step; i--)
+		{
+			if (sortArray[i] < sortArray[i - step])
+			{
+				T temp = sortArray[i];
+				sortArray[i] = sortArray[i - step];
+				sortArray[i - step] = temp;
+				moveTimes++;
+			}
+			loopTimes++;
+		}
+		step = step / 1.3;
+	}
+
+	//Second stage
+	bool hasSwap = false;
+	for (unsigned int i = 0; i < size; i++)
+	{
+		hasSwap = false;
+		for (unsigned int j = size - 1; j > i; j--)
+		{
+			loopTimes++;
+			if (sortArray[j] < sortArray[j - 1])
+			{
+				T temp = sortArray[j];
+				sortArray[j] = sortArray[j - 1];
+				sortArray[j - 1] = temp;
+				hasSwap = true;
+				moveTimes++;
+			}
+		}
+		if (!hasSwap)
+		{
+			break;
+		}
+	}
+}
+
+template <typename T>
+void Sort<T>::shellSort(T* const sortArray, const unsigned int size)
+{
+	if (size < 10)
+	{
+		cout << "The array is so small, no need shell Sort, use direct insert sort is fine!" << endl;
+		directInsertSort(sortArray, size);
+	}
+	else
+	{
+		int increaseArray[20]; //This could support to the max unsigned int in 32bit program
+		int h = 1;
+		int increaseArrayNum = 0;
+		for (int i = 0; h < size; i++)
+		{
+			//loopTimes++;
+			increaseArray[i] = h;
+			h = 3 * h + 1;
+			increaseArrayNum++;
+		}
+
+		for (int i = increaseArrayNum - 2; i >= 0; i--)
+		{
+			int increaseStep = increaseArray[i];
+			for (int j = 0; j < increaseStep; j++)
+			{
+				for (int k = j + increaseStep; k < size; k = k + increaseStep)
+				{
+					T insertValue = sortArray[k];
+					for (int l = k; (l - increaseStep) >= 0; l = l - increaseStep)
+					{
+						loopTimes++;						
+						if (sortArray[l] < sortArray[l - increaseStep])
+						{
+							sortArray[l] = sortArray[l - increaseStep];
+							sortArray[l - increaseStep] = insertValue;
+							moveTimes++;
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
+			}
+		}
+
+	}
+	return;
+}
 
 
 
