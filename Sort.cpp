@@ -1,18 +1,20 @@
 #include "Sort.h"
+#include "Heap.h"
+#include "Heap.cpp"
 #include <time.h>
 #include <stdlib.h>
 #include <iostream>
 using namespace std;
 
-template<typename T>
-Sort<T>::Sort()
+template<typename T, unsigned int size>
+Sort<T, size>::Sort()
 {
 	loopTimes = 0;
 	moveTimes = 0;
 }
 
-template<typename T>
-Sort<T>::~Sort()
+template<typename T, unsigned int size>
+Sort<T, size>::~Sort()
 {
 
 }
@@ -23,8 +25,8 @@ Sort<T>::~Sort()
 //2. Compare times will different as original sequence different, O(n2)
 //3. Move times will different as original sequence different, O(n2)
 //4. Terminate condition: inner loop, new value not small than compared value
-template<typename T>
-void Sort<T>::directInsertSort(T* const sortArray, const unsigned int size)
+template<typename T, unsigned int size>
+void Sort<T,size>::directInsertSort(T* const sortArray/*, const unsigned int size*/)
 {
 	for (unsigned int i = 0; i < size; i++)
 	{
@@ -52,8 +54,8 @@ void Sort<T>::directInsertSort(T* const sortArray, const unsigned int size)
 //2. Compare times will identical as original sequence different, O(n2)
 //3. Move times will different as original sequence different, O(n)
 //4. Terminate condition: none
-template<typename T>
-void Sort<T>::simpleSelectSort(T* const sortArray, const unsigned int size)
+template<typename T, unsigned int size>
+void Sort<T, size>::simpleSelectSort(T* const sortArray/*, const unsigned int size*/)
 {
 	T smallest;
 	for (unsigned int i = 0; i < size; i++)
@@ -84,8 +86,8 @@ void Sort<T>::simpleSelectSort(T* const sortArray, const unsigned int size)
 //2. Time complecity, O(n2)
 //3. Space complecity, O(n2)
 //4. Terminate condition, during one time compare, no change happens
-template <typename T>
-void Sort<T>::bubbleSort(T* const sortArray, const unsigned int size)
+template <typename T, unsigned int size>
+void Sort<T,size>::bubbleSort(T* const sortArray/*, const unsigned int size*/)
 {
 	bool hasSwap = false;
 	for (unsigned int i = 0; i < size; i++)
@@ -116,8 +118,8 @@ void Sort<T>::bubbleSort(T* const sortArray, const unsigned int size)
 //3. Space complecity, O(n2)
 //4. Terminate condition, for first stage, step become 1, for second stage, during one time compare, no change happens
 
-template<typename T>
-void Sort<T>::combSort(T* const sortArray, const unsigned int size)
+template<typename T, unsigned int size>
+void Sort<T, size>::combSort(T* const sortArray/*, const unsigned int size*/)
 {
 	//First stage
 	unsigned int step = size / 1.3;
@@ -161,8 +163,13 @@ void Sort<T>::combSort(T* const sortArray, const unsigned int size)
 	}
 }
 
-template <typename T>
-void Sort<T>::shellSort(T* const sortArray, const unsigned int size)
+//Combsort
+//1. Not Stable
+//2. Time complex O(n1.3)
+//3. Space complecity, ?
+//4. Terminate condition, increase step decrease to 1
+template <typename T, unsigned int size>
+void Sort<T,size>::shellSort(T* const sortArray/*, const unsigned int size*/)
 {
 	if (size < 10)
 	{
@@ -213,6 +220,34 @@ void Sort<T>::shellSort(T* const sortArray, const unsigned int size)
 }
 
 
+//Heapsort
+//1. Not Stable
+//2. Time complex O(nlog(n))
+//3. Space complecity, O(nlog(n))
+//4. No special
+template <typename T, unsigned int size>
+void Sort<T,size>::heapSort(T * const sortArray/*, const unsigned int size*/)
+{
+	Heap<T, size> heap;
+	TimeAndSpace timeAndSpace;
+	//Construct the heap
+	for (unsigned int i = 0; i < size; i++)
+	{
+		timeAndSpace = heap.AddElem(sortArray[i]);
+		loopTimes += timeAndSpace.times;
+		moveTimes += timeAndSpace.moves;
+		
+	}
+	for (unsigned int i = 0; i < size; i++)
+	{
+		T value;
+		timeAndSpace = heap.deleteElem(value);
+		loopTimes += timeAndSpace.times;
+		moveTimes += timeAndSpace.moves;
+		sortArray[size - 1 - i] = value;
+	}
+	return;
+}
 
 //
 //void Sort::mergeSort(int low, int high)
@@ -356,94 +391,9 @@ void Sort<T>::shellSort(T* const sortArray, const unsigned int size)
 //}
 //
 //
-////Bubble Select Sort
-////1. Stable
-////2. Compare times will different as original sequence different, O(n2)
-////3. Move times will different as original sequence different, O(n2)
-////4. Terminate condition: outer loop, not swap happened during one time loop compare
-//
-//void Sort::bubbleSort()
-//{
-//	bool hasSwap = false;
-//	for (int i = 0; i < SORT_ARRAY_SIZE; i++)
-//	{
-//		hasSwap = false;
-//		for (int j = 0; j < SORT_ARRAY_SIZE - i - 1; j++)
-//		{
-//			loopTimes++;
-//			if (a[j] > a[j + 1])
-//			{
-//				int temp = a[j];
-//				a[j] = a[j + 1];
-//				a[j + 1] = temp;
-//				hasSwap = true;
-//				moveTimes++;
-//			}
-//		}
-//		if (!hasSwap)
-//		{
-//			break;
-//		}
-//	}
-//}
-//
-//void Sort::combSort()
-//{
-//	int comb = SORT_ARRAY_SIZE / 1.3;
-//	while (comb > 1)
-//	{
-//		for (int j = comb; j < SORT_ARRAY_SIZE; j++)
-//		{
-//			loopTimes++;
-//			if (a[j - comb] > a[j])
-//			{
-//				//swap
-//				int temp = a[j];
-//				a[j] = a[j - comb];
-//				a[j - comb] = temp;
-//				moveTimes++;
-//			}
-//		}
-//		comb = comb / 1.3;
-//	}
-//	//bubble sort
-//	bubbleSort();
-//}
-//
-//void Sort::shellSort()
-//{
-//	int increaseArrayLength = 0;
-//	for (int i = 1; i < SORT_ARRAY_SIZE; i = 3 * i + 1)
-//	{
-//		increaseArrayLength++;
-//	}
-//	if (0 == increaseArrayLength)
-//	{
-//		return;
-//	}
-//	int *pIncreaseArray = new int[increaseArrayLength];
-//	int *oriPointer = pIncreaseArray;
-//	for (int i = 1; i < SORT_ARRAY_SIZE; i = 3 * i + 1)
-//	{
-//		*pIncreaseArray = i;
-//		pIncreaseArray++;
-//	}
-//	pIncreaseArray = oriPointer;
-//
-//	for (int i = increaseArrayLength; i > 0; i--)
-//	{
-//		int step = pIncreaseArray[i-1];
-//		for (int j = 0; j < step; j++)
-//		{
-//			directInsertSortForShellSort(step, j);
-//		}
-//		
-//	}
-//	delete pIncreaseArray;
-//}
 
-template <typename T>
-void Sort<T>::print(T* const sortArray, const unsigned int size)
+template <typename T, unsigned int size>
+void Sort<T, size>::print(T* const sortArray)
 {
 	for (unsigned int i = 0; i < size; i++)
 	{

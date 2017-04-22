@@ -3,20 +3,21 @@
 
 #include "Constant.h"
 
-template <class T>
+template <class T, unsigned int size>
 class Sort
 {
 public:
 	Sort();
 	~Sort();
-	void directInsertSort(T* const sortArray, const unsigned int size);
-	void simpleSelectSort(T* const sortArray, const unsigned int size);
-	void bubbleSort(T* const sortArray, const unsigned int size);
-	void combSort(T* const sortArray, const unsigned int size);
-	void shellSort(T* const sortArray, const unsigned int size);
+	void directInsertSort(T* const sortArray/*, const unsigned int size*/);
+	void simpleSelectSort(T* const sortArray/*, const unsigned int size*/);
+	void bubbleSort(T* const sortArray/*, const unsigned int size*/);
+	void combSort(T* const sortArray/*, const unsigned int size*/);
+	void shellSort(T* const sortArray/*, const unsigned int size*/);
+	void heapSort(T * const sortArray/*, const unsigned int size*/);
 	//void quickSort(int low, int high);
 	//void mergeSort(int low, int high);
-	void print(T* const sortArray, const unsigned int size);
+	void print(T* const sortArray/*, const unsigned int size*/);
 private:
 	//void merge(int low, int high);
 	//void initArray();

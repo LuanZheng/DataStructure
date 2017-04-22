@@ -57,8 +57,9 @@ bool Heap<T, capacity>::isFull()
 }
 
 template <class T, unsigned int capacity>
-void Heap<T, capacity>::AddElem(T value)
+TimeAndSpace Heap<T, capacity>::AddElem(T value)
 {
+	TimeAndSpace timeAndSpace;
 	if (isFull())
 	{
 		//Do nothing
@@ -79,13 +80,15 @@ void Heap<T, capacity>::AddElem(T value)
 			int childIndex = elemNum;
 			while (parentIndex >= 0)   //has parent
 			{
+				(timeAndSpace.times)++;
 				bool hasSwap = false;
 				if (heapArray[childIndex]->data > heapArray[parentIndex]->data)
 				{
-					int temp = heapArray[parentIndex]->data;
+					T temp = heapArray[parentIndex]->data;
 					heapArray[parentIndex]->data = heapArray[childIndex]->data;
 					heapArray[childIndex]->data = temp;
 					hasSwap = true;
+					(timeAndSpace.moves)++;
 				}
 				if (!hasSwap)
 				{
@@ -100,12 +103,13 @@ void Heap<T, capacity>::AddElem(T value)
 			elemNum++;
 		}
 	}
-	return;
+	return timeAndSpace;
 }
 
 template <class T, unsigned int capacity>
-void Heap<T, capacity>::deleteElem(T& value)
+TimeAndSpace Heap<T, capacity>::deleteElem(T& value)
 {
+	TimeAndSpace timeAndSpace;
 	if (isEmpty())
 	{
 		//Do nothing
@@ -123,6 +127,7 @@ void Heap<T, capacity>::deleteElem(T& value)
 
 		while (index * 2 + 1 < elemNum)
 		{
+			(timeAndSpace.times)++;
 			bool hasSwap = false;
 			if (index * 2 + 2 < elemNum)  //Both has left and right
 			{
@@ -132,11 +137,12 @@ void Heap<T, capacity>::deleteElem(T& value)
 					if (heapArray[index]->data < heapArray[index * 2 + 1]->data)
 					{
 						//swap
-						int temp = heapArray[index]->data;
+						T temp = heapArray[index]->data;
 						heapArray[index]->data = heapArray[index * 2 + 1]->data;
 						heapArray[index * 2 + 1]->data = temp;
 						hasSwap = true;
 						index = index * 2 + 1;
+						(timeAndSpace.moves)++;
 					}
 					else
 					{
@@ -148,11 +154,12 @@ void Heap<T, capacity>::deleteElem(T& value)
 					if (heapArray[index]->data < heapArray[index * 2 + 2]->data)
 					{
 						//swap
-						int temp = heapArray[index]->data;
+						T temp = heapArray[index]->data;
 						heapArray[index]->data = heapArray[index * 2 + 2]->data;
 						heapArray[index * 2 + 2]->data = temp;
 						hasSwap = true;
 						index = index * 2 + 2;
+						(timeAndSpace.moves)++;
 					}
 					else
 					{
@@ -165,9 +172,10 @@ void Heap<T, capacity>::deleteElem(T& value)
 				//compare 2 elem, index & index*2+1, index*2+1 must leaf node, after compare, no need loop
 				if (heapArray[index]->data < heapArray[index * 2 + 1]->data)
 				{
-					int temp = heapArray[index]->data;
+					T temp = heapArray[index]->data;
 					heapArray[index]->data = heapArray[index * 2 + 1]->data;
 					heapArray[index * 2 + 1]->data = temp;
+					(timeAndSpace.moves)++;
 					break;
 				}
 				else
@@ -182,5 +190,5 @@ void Heap<T, capacity>::deleteElem(T& value)
 		}
 	}
 
-	return;
+	return timeAndSpace;
 }

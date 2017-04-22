@@ -10,6 +10,13 @@ struct HeapNode
 	T data;                 //data
 };
 
+class TimeAndSpace
+{
+public:
+	int times = 0;
+	int moves = 0;
+};
+
 
 template <class T, unsigned int capacity>
 class Heap
@@ -17,8 +24,8 @@ class Heap
 public:
 	Heap();
 	~Heap();
-	void AddElem(T value);
-	void deleteElem(T &value);
+	TimeAndSpace AddElem(T value);
+	TimeAndSpace deleteElem(T &value);
 	bool isFull();
 	bool isEmpty();
 private:
