@@ -249,6 +249,69 @@ void Sort<T,size>::heapSort(T * const sortArray/*, const unsigned int size*/)
 	return;
 }
 
+
+//Quicksort
+//1. Not Stable
+//2. Time complex O(nlog(n))
+//3. Space complecity, O(nlog(n))
+//4. In one time quick sort, when low>=high, stop
+template <typename T, unsigned int size>
+void Sort<T, size>::quickSort(int low,  int high, T* const sortArray)
+{
+	if (low >= high)
+	{
+
+	}
+	else
+	{
+		int startLowIndex = low;
+		int startHighIndex = high;
+		//T dataFlag = sortArray[low];
+		while (low < high)
+		{
+			while ((low < high) && (sortArray[high] >= sortArray[low]))
+			{
+				loopTimes++;
+				high--;
+			}
+			if (low >= high)
+			{
+				break;
+			}
+			else
+			{
+				T temp = sortArray[high];
+				sortArray[high] = sortArray[low];
+				sortArray[low] = temp;
+				moveTimes++;
+				low++;
+			}
+
+			while ((low < high) && (sortArray[low] <= sortArray[high]))
+			{
+				loopTimes++;
+				low++;
+			}
+			if (low >= high)
+			{
+				break;
+			}
+			else
+			{
+				T temp = sortArray[low];
+				sortArray[low] = sortArray[high];
+				sortArray[high] = temp;
+				moveTimes++;
+				high--;
+			}
+		}
+		//Be careful for low-1 and low+1, if forget the +1 or -1, will result dead loop
+		quickSort(startLowIndex, low - 1, sortArray);
+		quickSort(low + 1, startHighIndex, sortArray);
+	}
+	return;
+}
+
 //
 //void Sort::mergeSort(int low, int high)
 //{
