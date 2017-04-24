@@ -16,11 +16,10 @@ public:
 	void shellSort(T* const sortArray);
 	void heapSort(T * const sortArray);
 	void quickSort(int low, int high, T* const sortArray);
-	//void mergeSort(int low, int high);
+	void mergeSort(T* const sortArray, int low, int high);
 	void print(T* const sortArray);
 private:
-	//void merge(int low, int high);
-	//void directInsertSortForShellSort(int step, int startIndex);
+	void merge(T* const sortArray, int low, int high);
 	unsigned int loopTimes;
 	unsigned int moveTimes;
 };

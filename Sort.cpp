@@ -312,17 +312,104 @@ void Sort<T, size>::quickSort(int low,  int high, T* const sortArray)
 	return;
 }
 
-//
-//void Sort::mergeSort(int low, int high)
-//{
-//	if (low >= high)
-//		return;
-//
-//	int mid = (low + high) / 2;
-//	mergeSort(low, mid);
-//	mergeSort(mid + 1, high);
-//	merge(low, high);
-//}
+
+//Mergesort
+//1. Stable
+//2. Time complex O(nlog(n))
+//3. Need addition space's help (tempArray)
+//4. In one time merge sort, when low>=high, stop
+template <typename T, unsigned int size>
+void Sort<T, size>::mergeSort(T* const sortArray, int low, int high)
+{
+	if (low >= high)
+	{
+
+	}
+	else
+	{
+		int mid = (low + high) / 2;
+		mergeSort(sortArray, low, mid);
+		mergeSort(sortArray, mid + 1, high);
+		merge(sortArray, low, high);
+	}
+	return;
+}
+
+
+template <typename T, unsigned int size>
+void Sort<T, size>::merge(T* const sortArray, int low, int high)
+{
+	T* tempArray = new T[high-low+1];
+	int mid = (low + high) / 2;
+	int i = low;
+	int j = mid + 1;
+	int tempArrayIndex = 0;
+	while ((i <= mid) && (j <= high))
+	{
+		loopTimes++;
+		if (sortArray[i] <= sortArray[j])
+		{
+			tempArray[tempArrayIndex] = sortArray[i];
+			i++;
+			tempArrayIndex++;
+		}
+		else
+		{
+			tempArray[tempArrayIndex] = sortArray[j];
+			j++;
+			tempArrayIndex++;
+		}
+	}
+
+	if (i > mid)
+	{
+		while (j <= high)
+		{
+			loopTimes++;
+			tempArray[tempArrayIndex] = sortArray[j];
+			j++;
+			tempArrayIndex++;
+		}
+	}
+	else if (j > high)
+	{
+		while (i <= mid)
+		{
+			loopTimes++;
+			tempArray[tempArrayIndex] = sortArray[i];
+			i++;
+			tempArrayIndex++;
+		}
+	}
+
+	//tempArrayIndex = 0;
+	//for (int i = low; i <= high; i++)
+	//{
+	//	sortArray[i] = tempArray[tempArrayIndex];
+	//	tempArrayIndex++;
+	//}
+
+	memset(&sortArray[low], 0, sizeof(T) * (high-low+1));
+	memcpy(&sortArray[low], tempArray, sizeof(T) * (high-low+1));
+	delete[] tempArray;
+	tempArray = NULL;
+	return;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //
 //void Sort::merge(int low, int high)
 //{
@@ -386,74 +473,7 @@ void Sort<T, size>::quickSort(int low,  int high, T* const sortArray)
 //	tempArray = NULL;
 //	return;
 //}
-//
-//void Sort::quickSort(int low, int high)
-//{
-//	if (low >= high)
-//		return;
-//
-//	int flag = a[low];
-//	int i = low;
-//	int j = high;
-//	cout << "LOW=" << low << "HIGH=" << high << endl;
-//	while (i < j)
-//	{
-//		while ((i < j) && (a[j] >= flag))   //= is very important, else it will result dead loop. i<j maybe for ever satisfy
-//		{
-//			loopTimes++;
-//			j--;
-//		}
-//		a[i] = a[j];
-//
-//		while ((i<j) && (a[i] <= flag))
-//		{
-//			loopTimes++;
-//			i++;
-//		}
-//		a[j] = a[i];
-//	}
-//	a[i] = flag;
-//	quickSort(low, i - 1);
-//	quickSort(i + 1, high);
-//}
 
-
-//void Sort::initArray()
-//{
-//	srand(time(0));
-//	for (int i = 0; i < SORT_ARRAY_SIZE; i++)
-//	{
-//		a[i] = rand();
-//	}
-//	loopTimes = 0;
-//	moveTimes = 0;
-//}
-
-
-
-//void Sort::directInsertSortForShellSort(int step, int startIndex)
-//{
-//	for (int i = startIndex; i < SORT_ARRAY_SIZE; i=i+step)
-//	{
-//		int flag = a[i];
-//		for (int j = i - step; j >= 0; j = j - step)
-//		{
-//			loopTimes++;
-//			if (flag < a[j])
-//			{
-//				a[j+step] = a[j];
-//				a[j] = flag;
-//				moveTimes++;
-//			}
-//			else
-//			{
-//				break;
-//			}
-//		}
-//	}
-//}
-//
-//
 
 template <typename T, unsigned int size>
 void Sort<T, size>::print(T* const sortArray)
