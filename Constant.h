@@ -2,7 +2,7 @@
 #define _CONSTANT_H_
 
 #define NULL 0
-const int QUEUE_SIZE = 16;
+const int QUEUE_SIZE = 100;
 //const int QUEUE_DEFAULT_VALUE = -1;
 enum QUEUE_PTR_FLAG{
 	READ_PTR = 1,

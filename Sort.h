@@ -17,6 +17,7 @@ public:
 	void heapSort(T * const sortArray);
 	void quickSort(int low, int high, T* const sortArray);
 	void mergeSort(T* const sortArray, int low, int high);
+	void radixSort(unsigned int* const sortArray);
 	void print(T* const sortArray);
 private:
 	void merge(T* const sortArray, int low, int high);

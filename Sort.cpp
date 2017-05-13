@@ -1,6 +1,8 @@
 #include "Sort.h"
 #include "Heap.h"
 #include "Heap.cpp"
+#include "Queue.h"
+#include "Queue.cpp"
 #include <time.h>
 #include <stdlib.h>
 #include <iostream>
@@ -396,83 +398,59 @@ void Sort<T, size>::merge(T* const sortArray, int low, int high)
 	return;
 }
 
+template <typename T, unsigned int size>
+void Sort<T, size>::radixSort(unsigned int* const sortArray)
+{
+	LinkQueue<unsigned int, QUEUE_SIZE> *baseList[10];
+	baseList[0] = new LinkQueue<unsigned int, QUEUE_SIZE>();
+	baseList[1] = new LinkQueue<unsigned int, QUEUE_SIZE>();
+	baseList[2] = new LinkQueue<unsigned int, QUEUE_SIZE>();
+	baseList[3] = new LinkQueue<unsigned int, QUEUE_SIZE>();
+	baseList[4] = new LinkQueue<unsigned int, QUEUE_SIZE>();
+	baseList[5] = new LinkQueue<unsigned int, QUEUE_SIZE>();
+	baseList[6] = new LinkQueue<unsigned int, QUEUE_SIZE>();
+	baseList[7] = new LinkQueue<unsigned int, QUEUE_SIZE>();
+	baseList[8] = new LinkQueue<unsigned int, QUEUE_SIZE>();
+	baseList[9] = new LinkQueue<unsigned int, QUEUE_SIZE>();
+	//Assume the max length of a number is 10
+	int mod = 10;
+	int divValue = 1;
+	for (int i = 0; i < 10; i++)
+	{
+		if (0 == i)
+		{
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//void Sort::merge(int low, int high)
-//{
-//	int* tempArray = new int[high-low + 1];
-//	memset(tempArray, 0, (high - low + 1)*sizeof(int));
-//	int mid = (low + high) / 2;
-//	//First array is from low to mid
-//	//Second array is from mid+1 to high
-//	int i = low;
-//	int j = mid+1;
-//	int tempArrayIndex = 0;
-//	while ((i <= mid) && (j <= high))
-//	{
-//		loopTimes++;
-//		if (a[i] < a[j])
-//		{
-//			tempArray[tempArrayIndex] = a[i];
-//			tempArrayIndex++;
-//			i++;
-//		}
-//		else
-//		{
-//			tempArray[tempArrayIndex] = a[j];
-//			tempArrayIndex++;
-//			j++;
-//		}
-//	}
-//
-//	if (i > mid)
-//	{
-//		while (j <= high)
-//		{
-//			loopTimes++;
-//			tempArray[tempArrayIndex] = a[j];
-//			tempArrayIndex++;
-//			j++;
-//		}
-//	}
-//	else if (j > high)
-//	{
-//		while (i <= mid)
-//		{
-//			loopTimes++;
-//			tempArray[tempArrayIndex] = a[i];
-//			tempArrayIndex++;
-//			i++;
-//		}
-//	}
-//	else
-//	{
-//		//impossible
-//	}
-//	tempArrayIndex = 0;
-//	for (int i = low; i <= high; i++)
-//	{
-//		loopTimes++;
-//		a[i] = tempArray[tempArrayIndex];
-//		tempArrayIndex++;
-//	}
-//	delete[] tempArray;
-//	tempArray = NULL;
-//	return;
-//}
+		}
+		else
+		{
+			divValue = divValue * 10;
+		}
+		for (int j = 0; j < size; j++)
+		{
+			unsigned int value = (sortArray[j]/divValue) % mod;
+			baseList[value]->enQueue(sortArray[j]);
+		}
+		int index = 0;
+		for (int k = 0; k < 10; k++)  //Means 10 array
+		{
+			unsigned int dequeueValue;
+			while (!baseList[k]->isEmpty())
+			{
+				baseList[k]->deQueue(dequeueValue);
+				sortArray[index] = dequeueValue;
+				++index;
+			}
+		}
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		if (NULL != baseList[i])
+		{
+			delete baseList[i];
+			baseList[i] = NULL;
+		}
+	}
+}
 
 
 template <typename T, unsigned int size>

@@ -443,7 +443,7 @@ void BinSeqTree::breadthFirstOrder()
 	if (isEmpty())
 		return;
 
-	ArrayQueue<BiNode*> *queue = new ArrayQueue<BiNode*>();
+	ArrayQueue<BiNode*, QUEUE_SIZE> *queue = new ArrayQueue<BiNode*, QUEUE_SIZE>();
 	queue->enQueue(root);
 	while (!(queue->isEmpty()))
 	{
