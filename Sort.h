@@ -3,25 +3,27 @@
 
 #include "Constant.h"
 
+template <class T, unsigned int size>
 class Sort
 {
 public:
 	Sort();
-	void directInsertSort();
-	void simpleSelectSort();
-	void bubbleSort();
-	void combSort();
-	void shellSort();
-	void quickSort(int low, int high);
-	void mergeSort(int low, int high);
-	void print();
+	~Sort();
+	void directInsertSort(T* const sortArray);
+	void simpleSelectSort(T* const sortArray);
+	void bubbleSort(T* const sortArray);
+	void combSort(T* const sortArray);
+	void shellSort(T* const sortArray);
+	void heapSort(T * const sortArray);
+	void quickSort(int low, int high, T* const sortArray);
+	void mergeSort(T* const sortArray, int low, int high);
+	void radixSort(unsigned int* const sortArray);
+	void countSort(unsigned const int* sortArray);
+	void print(T* const sortArray);
 private:
-	void merge(int low, int high);
-	void initArray();
-	void directInsertSortForShellSort(int step, int startIndex);
-	int a[SORT_ARRAY_SIZE];
-	int loopTimes;
-	int moveTimes;
+	void merge(T* const sortArray, int low, int high);
+	unsigned int loopTimes;
+	unsigned int moveTimes;
 };
 
 #endif

@@ -2,7 +2,8 @@
 
 
 
-template<typename T> ArrayQueue<T>::ArrayQueue()
+template<typename T, unsigned int capacity> 
+ArrayQueue<T,capacity>::ArrayQueue()
 {
 	readPtr = queue;
 	writePtr = queue;
@@ -10,7 +11,8 @@ template<typename T> ArrayQueue<T>::ArrayQueue()
 	writePtrLoop = 0;
 }
 
-template<typename T> ArrayQueue<T>::~ArrayQueue()
+template<typename T, unsigned int capacity> 
+ArrayQueue<T,capacity>::~ArrayQueue()
 {
 	readPtr = queue;
 	writePtr = queue;
@@ -18,7 +20,8 @@ template<typename T> ArrayQueue<T>::~ArrayQueue()
 	writePtrLoop = 0;
 }
 
-template<typename T> bool ArrayQueue<T>::isEmpty()
+template<typename T, unsigned int capacity> 
+bool ArrayQueue<T,capacity>::isEmpty()
 {
 	if ((writePtr == readPtr) && (writePtrLoop - readPtrLoop == 0))
 		return true;
@@ -26,7 +29,8 @@ template<typename T> bool ArrayQueue<T>::isEmpty()
 }
 
 
-template<typename T> bool ArrayQueue<T>::isFull()
+template<typename T, unsigned int capacity>
+bool ArrayQueue<T,capacity>::isFull()
 {
 	if ((writePtr == readPtr) && (writePtrLoop - readPtrLoop == 1))
 	{
@@ -35,7 +39,8 @@ template<typename T> bool ArrayQueue<T>::isFull()
 	return false;
 }
 
-template<typename T> void ArrayQueue<T>::moveNext(QUEUE_PTR_FLAG rOrW)
+template<typename T, unsigned int capacity> 
+void ArrayQueue<T,capacity>::moveNext(QUEUE_PTR_FLAG rOrW)
 {
 	if (READ_PTR == rOrW)
 	{
@@ -65,7 +70,8 @@ template<typename T> void ArrayQueue<T>::moveNext(QUEUE_PTR_FLAG rOrW)
 }
 
 
-template<typename T> bool ArrayQueue<T>::isLast(QUEUE_PTR_FLAG rOrW)
+template<typename T, unsigned int capacity> 
+bool ArrayQueue<T,capacity>::isLast(QUEUE_PTR_FLAG rOrW)
 {
 	if (READ_PTR == rOrW)
 	{
@@ -84,7 +90,8 @@ template<typename T> bool ArrayQueue<T>::isLast(QUEUE_PTR_FLAG rOrW)
 	return false;
 }
 
-template<typename T> bool ArrayQueue<T>::isFirst(QUEUE_PTR_FLAG rOrW)
+template<typename T, unsigned int capacity> 
+bool ArrayQueue<T,capacity>::isFirst(QUEUE_PTR_FLAG rOrW)
 {
 	if (READ_PTR == rOrW)
 	{
@@ -103,7 +110,8 @@ template<typename T> bool ArrayQueue<T>::isFirst(QUEUE_PTR_FLAG rOrW)
 	return false;
 }
 
-template<typename T> void ArrayQueue<T>::enQueue(T item)
+template<typename T, unsigned int capacity>
+void ArrayQueue<T, capacity>::enQueue(T item)
 {
 	if (isFull())
 	{
@@ -114,7 +122,8 @@ template<typename T> void ArrayQueue<T>::enQueue(T item)
 	return;
 }
 
-template<typename T> void ArrayQueue<T>::deQueue(T &item)
+template<typename T, unsigned int capacity> 
+void ArrayQueue<T,capacity>::deQueue(T &item)
 {
 	if (isEmpty())
 	{

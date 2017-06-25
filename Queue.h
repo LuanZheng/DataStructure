@@ -4,7 +4,8 @@
 #include "Constant.h"
 #include "LinkList.h"
 
-template<typename T> class ArrayQueue
+template<typename T, unsigned int capacity> 
+class ArrayQueue
 {
 public: 
 	ArrayQueue();
@@ -20,7 +21,7 @@ private:
 	bool isFirst(QUEUE_PTR_FLAG rOrW);
 	T* readPtr;
 	T* writePtr;
-	T queue[QUEUE_SIZE];
+	T queue[capacity];
 	int readPtrLoop;
 	int writePtrLoop;
 	//static T defaultValue;
