@@ -452,6 +452,88 @@ void Sort<T, size>::radixSort(unsigned int* const sortArray)
 	}
 }
 
+template <typename T, unsigned int size>
+void Sort<T, size>::countSort(unsigned const int* sortArray)
+{
+	unsigned int *tmpArray = new unsigned int[size];
+	memset(tmpArray, 0, size*sizeof(unsigned int));
+
+	unsigned int max = 0;
+	const unsigned int* startLoc = sortArray;
+	//First loop, find out the max value, the max value will define count array element num
+	for (unsigned int i = 0; i < size; i++)
+	{
+		loopTimes++;
+		moveTimes++;
+		unsigned int value = *sortArray;
+		if (value > max)
+		{
+			max = value;
+		}
+		tmpArray[i] = value;
+		if (i == size - 1)
+		{
+
+		}
+		else
+		{
+			sortArray++;
+		}
+	}
+
+	unsigned int* countArray = new unsigned int[max+1];
+	memset(countArray, 0, (max+1)*sizeof(unsigned int));
+
+	sortArray = startLoc;
+	//Second loop, count every elem frequency
+	for (unsigned int i = 0; i < size; i++)
+	{
+		loopTimes++;
+		moveTimes++;
+		unsigned int value = *sortArray;
+		countArray[value]++;
+		if (i == size - 1)
+		{
+
+		}
+		else
+		{
+			sortArray++;
+		}
+	}
+
+	unsigned int culValue = 0;
+	//Third loop, count the elem num less and equal than each elem
+	for (unsigned int i = 0; i < max + 1; i++)
+	{
+		loopTimes++;
+		moveTimes++;
+		culValue = culValue + countArray[i];
+		countArray[i] = culValue;
+	}
+
+	//Fourth loop, set the value into tmpArray
+	for (unsigned int i = 0; i < size; i++)
+	{
+		loopTimes++;
+		moveTimes++;
+		unsigned int sortArrayTailValue = *sortArray;
+		tmpArray[countArray[sortArrayTailValue] - 1] = sortArrayTailValue;
+		countArray[sortArrayTailValue]--;
+		sortArray--;
+	}
+
+	//print tmpArray, tmp Array is sorted list
+	for (unsigned int i = 0; i < size; i++)
+	{
+		if ((i != 0) && (i % 8 == 0))
+		{
+			cout << endl;
+		}
+		cout << tmpArray[i] << "  ";
+	}
+}
+
 
 template <typename T, unsigned int size>
 void Sort<T, size>::print(T* const sortArray)
