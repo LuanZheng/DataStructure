@@ -12,12 +12,13 @@ unsigned int HashFunction::overlapHashFunc(unsigned int keyValue, unsigned int l
 {
 	unsigned int divValue = findMaxPrime(length);
 	unsigned int value = 0;
-	while (keyValue != 0)
+	unsigned int tmpValue = keyValue;
+	while (tmpValue != 0)
 	{
-		value += keyValue % 1000;
-		keyValue /= 1000;
+		value += tmpValue % 1000;
+		tmpValue /= 1000;
 	}
-	unsigned int key = keyValue % divValue;
+	unsigned int key = value % divValue;
 	return key;
 }
 
@@ -30,7 +31,7 @@ unsigned int HashFunction::squareMidHashFunc(unsigned int keyValue, unsigned int
 	unsigned int rsValue = 0;
 	unsigned int squareValue = keyValue * keyValue;
 	unsigned int dArray[10];
-	memset(dArray, 0, sizeof(dArray) * 10);
+	memset(dArray, 0, sizeof(int)*10);
 	int i = 0;
 	while (squareValue != 0)
 	{
