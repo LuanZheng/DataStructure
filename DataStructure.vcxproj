@@ -144,6 +144,7 @@
     <ClInclude Include="BinSeqTree.h" />
     <ClInclude Include="CommonRegexMethod.h" />
     <ClInclude Include="Constant.h" />
+    <ClInclude Include="DataCompress.h" />
     <ClInclude Include="HashFunction.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="Heap.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="BinSearchTree.cpp" />
     <ClCompile Include="BinSeqTree.cpp" />
     <ClCompile Include="CommonRegexMethod.cpp" />
+    <ClCompile Include="DataCompress.cpp" />
     <ClCompile Include="HashFunction.cpp" />
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="Heap.cpp" />
