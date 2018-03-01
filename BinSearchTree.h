@@ -40,6 +40,7 @@ private:
 	AVLNode<T>* right;
 };
 
+
 template <class T, unsigned int capacity>
 class BinSearchTree
 {

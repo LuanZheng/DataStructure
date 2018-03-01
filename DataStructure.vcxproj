@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="BinSearchTree.h" />
     <ClInclude Include="BinSeqTree.h" />
+    <ClInclude Include="CombineCalculator.h" />
     <ClInclude Include="CommonRegexMethod.h" />
     <ClInclude Include="Constant.h" />
     <ClInclude Include="DataCompress.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="LinkList.h" />
     <ClInclude Include="Queue.h" />
     <ClInclude Include="RandomSelect.h" />
+    <ClInclude Include="RedBlackTree.h" />
     <ClInclude Include="Search.h" />
     <ClInclude Include="Sort.h" />
     <ClInclude Include="SparseTable.h" />
@@ -160,6 +162,7 @@
   <ItemGroup>
     <ClCompile Include="BinSearchTree.cpp" />
     <ClCompile Include="BinSeqTree.cpp" />
+    <ClCompile Include="CombineCalculator.cpp" />
     <ClCompile Include="CommonRegexMethod.cpp" />
     <ClCompile Include="DataCompress.cpp" />
     <ClCompile Include="HashFunction.cpp" />
@@ -169,6 +172,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Queue.cpp" />
     <ClCompile Include="RandomSelect.cpp" />
+    <ClCompile Include="RedBlackTree.cpp" />
     <ClCompile Include="Search.cpp" />
     <ClCompile Include="Sort.cpp" />
     <ClCompile Include="SparseTable.cpp" />

@@ -2,6 +2,8 @@
 #define _CONSTANT_H_
 
 #define NULL 0
+#define RED 0
+#define BLACK 1
 const int QUEUE_SIZE = 100;
 //const int QUEUE_DEFAULT_VALUE = -1;
 enum QUEUE_PTR_FLAG{
@@ -24,5 +26,7 @@ const int LINK_NODE_SIZE = 16;
 
 const int SPARSE_TABLE_ROW = 4;
 const int SPARSE_TABLE_COL = 8;
+
+
 
 #endif // ! _CONSTANT_H_

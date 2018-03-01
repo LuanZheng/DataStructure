@@ -63,6 +63,12 @@
     <ClInclude Include="DataCompress.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CombineCalculator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RedBlackTree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BinSearchTree.cpp">
@@ -111,6 +117,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="DataCompress.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CombineCalculator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RedBlackTree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
